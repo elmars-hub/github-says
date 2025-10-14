@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 
 import RoastCard from "@/components/roastCard";
-import MotivationCard from "@/components/motivationCard";
 import { GitHubUser } from "@/lib/getGithubData";
 
 export default function ResultModal({
@@ -43,18 +42,6 @@ export default function ResultModal({
           onShowMercy={onShowMercy}
           onClose={onClose}
         />
-
-        <AnimatePresence>
-          {showMotivation && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-            >
-              <MotivationCard message={motivation} username={userData.login} />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </motion.div>
   );

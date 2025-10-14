@@ -5,10 +5,13 @@ import { motion } from "framer-motion";
 import { Github } from "lucide-react";
 import { useTheme } from "next-themes";
 import FancyThemeToggle from "./fancythemetoggle";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { theme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -16,15 +19,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Staggered animation for children
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
     },
   };
 
@@ -34,27 +33,16 @@ export default function Navbar() {
       y: 0,
       opacity: 1,
       scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      },
+      transition: { type: "spring", stiffness: 300, damping: 20 },
     },
   };
 
   const navVariants = {
-    hidden: { y: -100, opacity: 0, scale: 0.95 },
+    hidden: { y: -100, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        mass: 1,
-        delay: 0.1,
-      },
+      transition: { type: "spring", stiffness: 100, damping: 15, delay: 0.1 },
     },
   };
 
@@ -63,7 +51,7 @@ export default function Navbar() {
       variants={navVariants}
       initial="hidden"
       animate="visible"
-      className={`fixed top-0 left-0 right-0 z-50 mx-auto mt-4 max-w-6xl px-6 rounded-full border backdrop-blur-lg transition-all duration-300
+      className={`fixed top-0 left-0 right-0 z-50 mx-auto mt-4 max-w-6xl px-4 sm:px-6 md:px-8 rounded-full border backdrop-blur-lg transition-all duration-300
         ${
           scrolled
             ? "bg-white/50 dark:bg-neutral-900/40 border-white/40 dark:border-neutral-800/50 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
@@ -76,7 +64,6 @@ export default function Navbar() {
         animate="visible"
         className="flex items-center justify-between py-3"
       >
-        {/* Logo */}
         <motion.div
           variants={itemVariants}
           whileHover={{
@@ -88,18 +75,20 @@ export default function Navbar() {
           className="flex items-center gap-2 select-none cursor-pointer"
         >
           <motion.div
-            animate={{
-              rotate: 360,
-            }}
+            animate={{ rotate: 360 }}
             transition={{
               duration: 20,
               repeat: Infinity,
               ease: "linear",
             }}
           >
-            <Github className="w-6 h-6 text-gray-800 dark:text-gray-100" />
+            <Github className="w-6 h-6 sm:w-7 sm:h-7 text-gray-800 dark:text-gray-100" />
           </motion.div>
-          <span className="text-lg font-semibold text-gray-900 dark:text-gray-100 relative">
+
+          <Link
+            href="/"
+            className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 relative"
+          >
             GitHubSays
             <motion.span
               className="absolute -bottom-1 left-0 h-0.5 bg-primary"
@@ -107,21 +96,17 @@ export default function Navbar() {
               animate={{ width: "100%" }}
               transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
             />
-          </span>
+          </Link>
         </motion.div>
 
         <div className="flex items-center gap-6">
           <motion.a
             variants={itemVariants}
-            href="#how-it-works"
-            whileHover={{
-              scale: 1.08,
-              y: -2,
-            }}
+            whileHover={{ scale: 1.08, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="relative text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
+            className="hidden sm:block relative text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
           >
-            How it works
+            <Link href="/howitworks">How it works</Link>
             <motion.span
               className="absolute -bottom-1 left-0 h-0.5 bg-gray-900 dark:bg-white"
               initial={{ width: 0 }}

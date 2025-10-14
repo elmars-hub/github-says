@@ -13,6 +13,7 @@ interface RoastCardProps {
     public_repos: number;
     followers: number;
     following: number;
+    name: string;
   };
   roast: string;
   onShowMercy: () => void;
@@ -28,21 +29,14 @@ const RoastCard = ({
   onClose,
 }: RoastCardProps) => {
   const handleShare = () => {
-    const shareText = `GitHub just roasted me! 🔥\n\nCheck out what GitHub really thinks about @${userData.login}'s code 😭\n\nGet roasted at: ${window.location.origin}`;
+    const url = `${window.location.origin}?user=${encodeURIComponent(
+      userData.login
+    )}`;
 
-    if (navigator.share) {
-      navigator
-        .share({
-          title: "GitHub Roasted Me!",
-          text: shareText,
-        })
-        .catch(() => {});
-    } else {
-      navigator.clipboard.writeText(shareText);
-      toast("Copied to clipboard! 📋");
-    }
+    navigator.clipboard.writeText(url);
+    toast.success("Link copied! Share your roast");
 
-    if (onShare) onShare();
+    if (onShare) onShare?.();
   };
 
   return (
@@ -50,9 +44,17 @@ const RoastCard = ({
       initial={{ scale: 0.5, opacity: 0, rotateY: 90 }}
       animate={{ scale: 1, opacity: 1, rotateY: 0 }}
       transition={{ duration: 0.8, ease: "backOut" }}
-      className="w-full max-w-3xl mx-auto mt-24"
+      className="w-full max-w-7xl mx-auto mt-20 scrollbar-hide"
     >
-      <div className="rounded-3xl p-8 relative overflow-hidden">
+      <div className="rounded-3xl p-1 relative overflow-hidden">
+        <Button
+          onClick={onClose}
+          variant="ghost"
+          className="absolute top-4 right-4 z-10 rounded-full w-10 h-10 cursor-pointer"
+        >
+          <X className="w-7 h-7" />
+        </Button>
+
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -65,21 +67,12 @@ const RoastCard = ({
             alt={userData.login}
             className="w-24 h-24 rounded-full border-4 border-primary/50 mb-4 shadow-lg"
           />
-
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            className="absolute top-4 right-4 z-10 rounded-full w-10 h-10  cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </Button>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Github className="w-6 h-6 text-primary" />
-            {userData.login}
+            {userData.name}
           </h2>
         </motion.div>
 
-        {/* GitHub Stats */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -87,7 +80,7 @@ const RoastCard = ({
           className="grid grid-cols-3 gap-4 mb-8"
         >
           <div className="glass rounded-xl p-4 text-center hover-lift">
-            <GitFork className="w-5 h-5 text-secondary mx-auto mb-2" />
+            <GitFork className="w-5 h-5 text-primary mx-auto mb-2" />
             <p className="text-2xl font-bold text-gradient">
               {userData.public_repos}
             </p>
@@ -101,7 +94,7 @@ const RoastCard = ({
             <p className="text-xs text-muted-foreground">Followers</p>
           </div>
           <div className="glass rounded-xl p-4 text-center hover-lift">
-            <Star className="w-5 h-5 text-accent mx-auto mb-2" />
+            <Star className="w-5 h-5 text-primary mx-auto mb-2" />
             <p className="text-2xl font-bold text-gradient">
               {userData.following}
             </p>
@@ -109,12 +102,11 @@ const RoastCard = ({
           </div>
         </motion.div>
 
-        {/* Roast Text */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mb-6 p-8 rounded-2xl bg-destructive/10 border-2 border-destructive/30 relative overflow-hidden"
+          className="mb-6 p-4 rounded-2xl bg-destructive/10 border-2 border-destructive/30 relative overflow-hidden"
         >
           <motion.div
             animate={{
@@ -142,7 +134,6 @@ const RoastCard = ({
           />
         </motion.div>
 
-        {/* Action Buttons */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -151,14 +142,14 @@ const RoastCard = ({
         >
           <Button
             onClick={onShowMercy}
-            className="flex-1 bg-primary  text-lg py-6 rounded-xl font-bold cursor-pointer"
+            className="flex-1 bg-primary text-lg py-6 rounded-xl font-bold cursor-pointer"
           >
             Show me mercy 🥺
           </Button>
           <Button
             onClick={handleShare}
             variant="outline"
-            className="px-6 py-6 rounded-xl border-primary/30 hover:bg-primary/10 transition-all"
+            className="px-6 py-6 rounded-xl border-primary/30 hover:bg-primary/10 transition-all cursor-pointer"
           >
             <Share2 className="w-5 h-5" />
           </Button>

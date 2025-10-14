@@ -45,13 +45,13 @@ const Loader = () => {
       exit={{ scale: 0, opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md"
     >
-      <div className=" rounded-3xl p-12  max-w-md mx-4">
+      <div className="rounded-3xl p-12 bg-primary max-w-md mx-4">
         <div className="flex gap-3 mb-6 justify-center">
           {[0, 1, 2, 3, 4].map((i) => (
             <div
               key={i}
               ref={(el) => (circleRefs.current[i] = el)}
-              className="w-3 h-3 rounded-full bg-primary"
+              className="w-3 h-3 rounded-full bg-white"
             />
           ))}
         </div>
@@ -60,7 +60,7 @@ const Loader = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="text-xl font-bold text-center text-gradient"
+          className="text-xl font-bold text-center text-white"
         >
           {loadingMessages[messageIndex]}
         </motion.p>

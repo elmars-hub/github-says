@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -13,29 +13,61 @@ import { generateRoast, getMotivationMessage } from "@/lib/roastGenerator";
 import HeroSection from "@/components/heroSection";
 import ResultModal from "@/components/resultModal";
 import LoadingOverlay from "@/components/loadingoverlay";
-import HowItWorks from "@/components/howItWorks";
+import { useSearchParams, useRouter } from "next/navigation";
+import MotivationModal from "@/components/motivationModal";
 
 export default function HomePage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState<GitHubUser | null>(null);
   const [roast, setRoast] = useState("");
-  const [showMotivation, setShowMotivation] = useState(false);
   const [motivation, setMotivation] = useState("");
+  const [showMotivation, setShowMotivation] = useState(false);
 
-  const handleRoast = async () => {
-    if (!username.trim()) {
-      toast("Hold up! Enter a GitHub username first");
+  useEffect(() => {
+    const paramUser = searchParams.get("user");
+    const savedUser = localStorage.getItem("github_user");
+    const savedRoast = localStorage.getItem("github_roast");
+    const savedMotivation = localStorage.getItem("github_motivation");
+
+    if (paramUser) {
+      setUsername(paramUser);
+      if (savedUser && savedRoast && savedMotivation) {
+        setUserData(JSON.parse(savedUser));
+        setRoast(savedRoast);
+        setMotivation(savedMotivation);
+      } else {
+        handleRoast(paramUser);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userData && roast) {
+      localStorage.setItem("github_user", JSON.stringify(userData));
+      localStorage.setItem("github_roast", roast);
+      localStorage.setItem("github_motivation", motivation);
+    }
+  }, [userData, roast, motivation]);
+
+  const handleRoast = async (customUser?: string) => {
+    const userToFetch = customUser || username.trim();
+    if (!userToFetch) {
+      toast("Hold up! Enter a GitHub username first 😅");
       return;
     }
 
     setLoading(true);
-    setUserData(null);
     setShowMotivation(false);
+    router.replace(`?user=${userToFetch}`);
+    localStorage.clear();
 
     try {
-      const user = await fetchGitHubUser(username.trim());
-      const repos = await fetchGitHubRepos(username.trim());
+      const user = await fetchGitHubUser(userToFetch);
+      const repos = await fetchGitHubRepos(userToFetch);
+
       const generatedRoast = generateRoast(user, repos);
       const generatedMotivation = getMotivationMessage();
 
@@ -51,22 +83,30 @@ export default function HomePage() {
     }
   };
 
-  const handleCloseModal = () => {
+  const handleClose = () => {
     setUserData(null);
     setShowMotivation(false);
     setUsername("");
+    localStorage.clear();
+    router.replace("/");
   };
 
-  const handleShowMercy = () => setShowMotivation(true);
+  const handleShowMercy = () => {
+    setShowMotivation(true);
+  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden">
-      <HeroSection
-        username={username}
-        setUsername={setUsername}
-        loading={loading}
-        handleRoast={handleRoast}
-      />
+      <AnimatePresence>
+        {!userData && !loading && (
+          <HeroSection
+            username={username}
+            setUsername={setUsername}
+            loading={loading}
+            handleRoast={() => handleRoast()}
+          />
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>{loading && <LoadingOverlay />}</AnimatePresence>
 
@@ -77,13 +117,18 @@ export default function HomePage() {
             roast={roast}
             motivation={motivation}
             showMotivation={showMotivation}
-            onClose={handleCloseModal}
+            onClose={handleClose}
             onShowMercy={handleShowMercy}
           />
         )}
       </AnimatePresence>
 
-      {!userData && !loading && <HowItWorks />}
+      <MotivationModal
+        show={showMotivation}
+        onClose={() => setShowMotivation(false)}
+        message={motivation}
+        username={userData?.name}
+      />
     </div>
   );
 }
