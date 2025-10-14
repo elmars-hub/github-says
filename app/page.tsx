@@ -13,12 +13,12 @@ import { generateRoast, getMotivationMessage } from "@/lib/roastGenerator";
 import HeroSection from "@/components/heroSection";
 import ResultModal from "@/components/resultModal";
 import LoadingOverlay from "@/components/loadingoverlay";
-import { useSearchParams, useRouter } from "next/navigation";
 import MotivationModal from "@/components/motivationModal";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState<GitHubUser | null>(null);
@@ -27,13 +27,16 @@ export default function HomePage() {
   const [showMotivation, setShowMotivation] = useState(false);
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
     const paramUser = searchParams.get("user");
+
     const savedUser = localStorage.getItem("github_user");
     const savedRoast = localStorage.getItem("github_roast");
     const savedMotivation = localStorage.getItem("github_motivation");
 
     if (paramUser) {
       setUsername(paramUser);
+
       if (savedUser && savedRoast && savedMotivation) {
         setUserData(JSON.parse(savedUser));
         setRoast(savedRoast);
@@ -61,8 +64,12 @@ export default function HomePage() {
 
     setLoading(true);
     setShowMotivation(false);
+
+    localStorage.removeItem("github_user");
+    localStorage.removeItem("github_roast");
+    localStorage.removeItem("github_motivation");
+
     router.replace(`?user=${userToFetch}`);
-    localStorage.clear();
 
     try {
       const user = await fetchGitHubUser(userToFetch);
@@ -87,7 +94,9 @@ export default function HomePage() {
     setUserData(null);
     setShowMotivation(false);
     setUsername("");
-    localStorage.clear();
+    localStorage.removeItem("github_user");
+    localStorage.removeItem("github_roast");
+    localStorage.removeItem("github_motivation");
     router.replace("/");
   };
 

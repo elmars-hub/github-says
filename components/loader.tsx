@@ -50,7 +50,9 @@ const Loader = () => {
           {[0, 1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              ref={(el) => (circleRefs.current[i] = el)}
+              ref={(el) => {
+                circleRefs.current[i] = el;
+              }}
               className="w-3 h-3 rounded-full bg-white"
             />
           ))}

@@ -274,7 +274,7 @@ export const generateRoast = (
   const name = user.name || user.login || "friend";
 
   // intro
-  let intro = random(DATA.intros).replace("{name}", name);
+  const intro = random(DATA.intros).replace("{name}", name);
   parts.push(intro);
 
   // repo count
@@ -329,7 +329,7 @@ export const generateRoast = (
   }
 
   // activity
-  let lastPush =
+  const lastPush =
     repos && repos.length > 0 ? new Date(repos[0].pushed_at) : null;
   if (lastPush && !isNaN(lastPush.getTime())) {
     const days = Math.floor(

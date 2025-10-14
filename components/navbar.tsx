@@ -1,17 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Github } from "lucide-react";
-import { useTheme } from "next-themes";
 import FancyThemeToggle from "./fancythemetoggle";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const { theme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -19,30 +15,35 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const navVariants: Variants = {
+    hidden: { y: -100, opacity: 0 },
     visible: {
+      y: 0,
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+      transition: {
+        type: "spring" as const,
+        stiffness: 100,
+        damping: 15,
+        delay: 0.1,
+      },
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: -20, opacity: 0, scale: 0.8 },
     visible: {
       y: 0,
       opacity: 1,
       scale: 1,
-      transition: { type: "spring", stiffness: 300, damping: 20 },
+      transition: { type: "spring" as const, stiffness: 300, damping: 20 },
     },
   };
 
-  const navVariants = {
-    hidden: { y: -100, opacity: 0 },
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
     visible: {
-      y: 0,
       opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15, delay: 0.1 },
+      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
     },
   };
 

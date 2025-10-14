@@ -5,12 +5,19 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+interface HeroSectionProps {
+  username: string;
+  setUsername: (value: string) => void;
+  loading: boolean;
+  handleRoast: () => void;
+}
+
 export default function HeroSection({
   username,
   setUsername,
   loading,
   handleRoast,
-}: any) {
+}: HeroSectionProps) {
   return (
     <section className="relative z-10 pt-40 pb-20 px-4 sm:px-6 md:px-8 text-center max-w-4xl mx-auto">
       <motion.h1

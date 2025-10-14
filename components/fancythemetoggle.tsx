@@ -29,7 +29,7 @@ export default function FancyThemeToggle() {
     setTimeout(() => setIsAnimating(false), 1500);
   };
 
-  const triggerThemeTransition = (isCurrentlyLight: any) => {
+  const triggerThemeTransition = (isCurrentlyLight: boolean) => {
     // Create transition overlay
     const overlay = document.createElement("div");
     overlay.style.cssText = `
@@ -57,15 +57,16 @@ export default function FancyThemeToggle() {
     }, 1500);
   };
 
-  const createInkBlobTransition = (container: any, isLightMode = false) => {
-    // Create multiple ink blobs that expand
+  const createInkBlobTransition = (
+    container: HTMLElement,
+    isLightMode = false
+  ) => {
     const blobCount = 8;
 
     for (let i = 0; i < blobCount; i++) {
       const blob = document.createElement("div");
-      const angle = (i / blobCount) * Math.PI * 2;
       const centerX = window.innerWidth / 2;
-      const centerY = 100; // Near top where button is
+      const centerY = 100;
 
       const gradient = isLightMode
         ? `radial-gradient(circle, #fef3c7 0%, #fed7aa 50%, #fbbf24 100%)`

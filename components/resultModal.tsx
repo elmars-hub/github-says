@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 import RoastCard from "@/components/roastCard";
 import { GitHubUser } from "@/lib/getGithubData";
@@ -8,8 +8,6 @@ import { GitHubUser } from "@/lib/getGithubData";
 export default function ResultModal({
   userData,
   roast,
-  motivation,
-  showMotivation,
   onClose,
   onShowMercy,
 }: {
