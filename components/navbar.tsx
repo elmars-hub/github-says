@@ -102,7 +102,7 @@ export default function Navbar() {
           <span className="text-lg font-semibold text-gray-900 dark:text-gray-100 relative">
             GitHubSays
             <motion.span
-              className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 dark:from-indigo-400 dark:to-purple-500"
+              className="absolute -bottom-1 left-0 h-0.5 bg-primary"
               initial={{ width: 0 }}
               animate={{ width: "100%" }}
               transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
