@@ -16,7 +16,7 @@ export default function Navbar() {
   }, []);
 
   const navVariants: Variants = {
-    hidden: { y: -100, opacity: 0 },
+    hidden: { y: -10, opacity: 0.8 },
     visible: {
       y: 0,
       opacity: 1,
@@ -52,11 +52,11 @@ export default function Navbar() {
       variants={navVariants}
       initial="hidden"
       animate="visible"
-      className={`fixed top-0 left-0 right-0 z-50 mx-auto mt-4 max-w-6xl px-4 sm:px-6 md:px-8 rounded-full border backdrop-blur-lg transition-all duration-300
+      className={`fixed top-0 left-0 right-0 z-50 mx-auto max-w-6xl px-4 sm:px-6 md:px-8 rounded-full border backdrop-blur-lg transition-all duration-300
         ${
           scrolled
-            ? "bg-white/50 dark:bg-neutral-900/40 border-white/40 dark:border-neutral-800/50 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-            : "bg-white/40 dark:bg-neutral-900/30 border-white/30 dark:border-neutral-800/30 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]"
+            ? "mt-2 bg-white/60 dark:bg-neutral-900/50 border-white/50 dark:border-neutral-800/60 shadow-[0_8px_32px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+            : "mt-4 bg-white/40 dark:bg-neutral-900/30 border-white/30 dark:border-neutral-800/30 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]"
         }`}
     >
       <motion.div
@@ -129,7 +129,10 @@ export default function Navbar() {
       <motion.div
         className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"
         initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: 1, opacity: 1 }}
+        animate={{
+          scaleX: scrolled ? 0.9 : 1,
+          opacity: scrolled ? 0.7 : 1,
+        }}
         transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
       />
     </motion.nav>
