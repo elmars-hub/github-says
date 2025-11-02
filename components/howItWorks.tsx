@@ -47,30 +47,83 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              whileHover={{ y: -10, scale: 1.05 }}
-              className="rounded-2xl p-8 text-center hover-lift bg-background shadow-md"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{
+                delay: index * 0.15,
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              whileHover={{
+                y: -12,
+                scale: 1.05,
+                transition: { type: "spring", stiffness: 400, damping: 15 },
+              }}
+              className="rounded-2xl p-8 text-center hover-lift bg-background shadow-md relative overflow-hidden group"
             >
+              {/* Animated background on hover */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={false}
+              />
+
               <motion.div
                 whileHover={{ rotate: 360, scale: 1.2 }}
-                transition={{ duration: 0.6 }}
-                className={`w-16 h-16 mx-auto mb-6 rounded-full glass flex items-center justify-center ${step.color}`}
+                whileTap={{ scale: 0.9 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20,
+                }}
+                className={`w-16 h-16 mx-auto mb-6 rounded-full glass flex items-center justify-center ${step.color} relative z-10 shadow-lg`}
               >
-                <step.icon className="w-8 h-8" />
+                <motion.div
+                  animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.8, 1, 0.8],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: index * 0.3,
+                  }}
+                >
+                  <step.icon className="w-8 h-8" />
+                </motion.div>
               </motion.div>
 
-              <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-              <p className="text-muted-foreground">{step.description}</p>
+              <motion.h3
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 + 0.2 }}
+                className="text-xl font-bold mb-3 relative z-10"
+              >
+                {step.title}
+              </motion.h3>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 + 0.3 }}
+                className="text-muted-foreground relative z-10"
+              >
+                {step.description}
+              </motion.p>
 
               <motion.div
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 + 0.3 }}
-                className={`mt-6 h-1 rounded-full ${step.color.replace(
+                transition={{
+                  delay: index * 0.15 + 0.4,
+                  duration: 0.6,
+                  ease: "easeOut",
+                }}
+                className={`mt-6 h-1 rounded-full relative z-10 ${step.color.replace(
                   "text-",
                   "bg-"
                 )}`}
